@@ -2,7 +2,9 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import AppButton from '../../../../components/atoms/AppButton';
+import AppInput from '../../../../components/atoms/AppInput';
 import AppText from '../../../../components/atoms/AppText';
+
 import { useAppTheme } from '../../../../hooks/useAppTheme';
 import { Spacing } from '../../../../theme';
 
@@ -28,13 +30,27 @@ export default function LoginScreen() {
         Sign in to continue
       </AppText>
 
-      <AppButton
-        title="Sign In"
-        style={styles.button}
-        onPress={() => {
-          console.log('Sign In');
-        }}
-      />
+      <View style={styles.form}>
+        <AppInput
+          label="Email"
+          placeholder="Enter your email"
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+
+        <AppInput
+          label="Password"
+          placeholder="Enter your password"
+          secureTextEntry
+        />
+
+        <AppButton
+          title="Sign In"
+          onPress={() => {
+            console.log('Sign In');
+          }}
+        />
+      </View>
     </View>
   );
 }
@@ -50,7 +66,7 @@ const styles = StyleSheet.create({
     marginTop: Spacing.sm,
   },
 
-  button: {
-    marginTop: Spacing.xxl,
+  form: {
+    marginTop: Spacing.xxxl,
   },
 });

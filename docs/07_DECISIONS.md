@@ -628,7 +628,7 @@ Much better long-term maintainability.
 
 ---
 
-# FC-021
+## FC-021
 
 Status
 
@@ -636,21 +636,21 @@ Accepted
 
 Decision
 
-Navigation Foundation must be completed before implementing business features.
+Build reusable UI components before integrating business logic.
 
 Reason
 
-Provides a stable application structure and avoids future navigation refactoring.
+Stable and reusable components reduce future refactoring and simplify form integration.
 
 Alternatives
 
-Build screens first.
+Develop forms directly with inline components.
 
 Consequences
 
-Cleaner project structure.
+Slightly more initial work.
 
-Lower future maintenance cost.
+Cleaner architecture and better maintainability.
 
 ---
 
