@@ -1,15 +1,7 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+
+import AuthNavigator from '../features/authentication/presentation/navigation/AuthNavigator';
 
 export default function RootNavigator() {
-  return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
-      <Text>Family Care 🚀</Text>
-    </View>
-  );
+  return <AuthNavigator />;
 }
