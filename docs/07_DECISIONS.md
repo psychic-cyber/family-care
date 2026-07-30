@@ -573,71 +573,126 @@ Better version control.
 
 Professional monorepo workflow.
 
----
+----
 
-## FC-019
-
-Status
-
-Pending
-
-Decision
-
-Maximum medicine reminder frequency.
-
----
-
-## FC-020
+# FC-019
 
 Status
 
-Pending
+Accepted
 
 Decision
 
-Cloud backup frequency.
+Use a centralized Design Token system for all UI styling.
+
+Reason
+
+Ensures visual consistency and prevents hardcoded design values across the application.
+
+Alternatives
+
+- Hardcoded values
+- Per-component styling
+
+Consequences
+
+Improved maintainability.
+
+Single source of truth for UI.
 
 ---
 
-# Rejected Decisions
+# FC-020
 
-## RD-001
+Status
+
+Accepted
 
 Decision
 
-Use Redux as the primary state management solution.
+Documentation must be updated before and after every feature implementation.
 
-Reason Rejected
+Reason
 
-The project does not currently require the complexity of Redux.
+Keeps implementation synchronized with project documentation and prevents architectural drift.
 
-TanStack Query and React Hooks provide a simpler and more maintainable solution.
+Alternatives
+
+Documentation at project completion only.
+
+Consequences
+
+Slightly more work during development.
+
+Much better long-term maintainability.
 
 ---
 
-## RD-002
+# FC-021
+
+Status
+
+Accepted
 
 Decision
 
-Store business logic inside UI components.
+Navigation Foundation must be completed before implementing business features.
 
-Reason Rejected
+Reason
 
-Violates Clean Architecture principles.
+Provides a stable application structure and avoids future navigation refactoring.
 
-Business logic belongs in the Application and Domain layers.
+Alternatives
+
+Build screens first.
+
+Consequences
+
+Cleaner project structure.
+
+Lower future maintenance cost.
 
 ---
 
-# Decision Rules
+# FC-022
 
-Every new architectural decision must:
+Status
 
-- Have a unique ID.
-- Include a clear reason.
-- List alternatives.
-- Explain consequences.
-- Be approved before implementation.
+Accepted
+
+Decision
+
+All application colors, spacing, typography, radius and elevation values must come from Theme Tokens.
+
+Reason
+
+Implements the Design System defined in the project documentation.
+
+Alternatives
+
+Direct values inside components.
+
+Consequences
+
+Consistent UI.
+
+Simpler theme changes.
+
+Supports Light and Dark themes.
+
+---
+
+# Pending Decisions
+
+FC-023
+
+Notification scheduling strategy.
+
+---
+
+FC-024
+
+Offline synchronization conflict resolution.
 
 ---
 
@@ -661,3 +716,9 @@ Every new architectural decision must:
 | FC-014 | React Native Voice | Accepted |
 | FC-015 | Offline-First | Accepted |
 | FC-016 | Testing Required | Accepted |
+| FC-017 | Monorepo Structure | Accepted |
+| FC-018 | Git Repository Root | Accepted |
+| FC-019 | Design Token System | Accepted |
+| FC-020 | Documentation-First Workflow | Accepted |
+| FC-021 | Navigation Before Features | Accepted |
+| FC-022 | Theme Tokens Only | Accepted |
