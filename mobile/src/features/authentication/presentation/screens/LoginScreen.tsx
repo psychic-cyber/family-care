@@ -17,14 +17,9 @@ export default function LoginScreen() {
   const {
     control,
     handleSubmit,
+    onSubmit,
+    isLoading,
   } = useLoginForm();
-
-  const onSubmit = (data: {
-    email: string;
-    password: string;
-  }) => {
-    console.log('Login Data:', data);
-  };
 
   return (
     <View
@@ -97,8 +92,9 @@ export default function LoginScreen() {
         />
 
         <AppButton
-          title="Sign In"
+          title={isLoading ? 'Signing In...' : 'Sign In'}
           onPress={handleSubmit(onSubmit)}
+          disabled={isLoading}
         />
       </View>
     </View>

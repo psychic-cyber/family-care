@@ -12,3 +12,4 @@ gradle-*.zip
 
 # Logs
 *.log
+mobile/android/app/google-services.json
