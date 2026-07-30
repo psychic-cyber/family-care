@@ -1,0 +1,14 @@
+# Android Studio
+.idea/
+
+# Gradle Distribution
+gradle-*.zip
+
+# macOS
+.DS_Store
+
+# VS Code
+.vscode/
+
+# Logs
+*.log

@@ -515,7 +515,10 @@ Higher confidence.
 
 # Pending Decisions
 
-These decisions require implementation experience before finalizing.
+FC-019
+FC-020
+FC-021
+FC-022
 
 ---
 
@@ -523,19 +526,26 @@ These decisions require implementation experience before finalizing.
 
 Status
 
-Pending
+Accepted
 
 Decision
 
-Reminder retry interval.
+Use a Monorepo structure with the React Native application inside the `mobile/` directory.
 
-Options
+Reason
 
-5 minutes
+Allows project documentation, assets, scripts, CI/CD, and future backend services to live in a single repository.
 
-10 minutes
+Alternatives
 
-15 minutes
+- Mobile project as repository root
+- Separate repositories
+
+Consequences
+
+Slightly more folder nesting.
+
+Much easier long-term maintenance and scalability.
 
 ---
 
@@ -543,11 +553,25 @@ Options
 
 Status
 
-Pending
+Accepted
 
 Decision
 
-Maximum family members per account.
+Use the repository root as the Git repository.
+
+Reason
+
+Track documentation, GitHub workflows, scripts, assets, and mobile application together.
+
+Alternatives
+
+Git initialized only inside `mobile/`.
+
+Consequences
+
+Better version control.
+
+Professional monorepo workflow.
 
 ---
 
