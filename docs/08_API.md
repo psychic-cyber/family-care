@@ -1,34 +1,50 @@
 # Family Care
 
-# API & Repository Contracts
+# API Specification
 
-Version: 1.0
+Version: 2.0
 
-Status: Approved
+Status
 
-Author: Psychic Cyber + ChatGPT
+Approved
 
-Last Updated: July 2026
+Project Owner
+
+Zaeem Ahmad
 
 ---
 
 # Purpose
 
-This document defines the contracts between the Application, Domain, and Infrastructure layers.
+This document defines all application APIs and repository contracts.
 
-The Presentation and Domain layers must never communicate directly with Firebase or any external service.
+Family Care currently uses Firebase.
 
-All communication must happen through repositories.
+The application architecture must allow migration to any backend in the future.
+
+Examples
+
+Firebase
+
+Node.js
+
+ASP.NET Core
+
+Spring Boot
+
+Laravel
+
+without changing Presentation Layer.
 
 ---
 
-# Architecture Flow
+# API Architecture
 
 Presentation
 
 ↓
 
-Application
+Use Case
 
 ↓
 
@@ -36,63 +52,71 @@ Repository Interface
 
 ↓
 
-Infrastructure
+Repository Implementation
 
 ↓
 
-Firebase / SQLite / External APIs
+Firebase
+
+(SQLite Offline)
+
+Future
+
+REST API
+
+GraphQL
+
+gRPC
 
 ---
 
-# Repository List
+# Current Backend
 
-AuthenticationRepository
+Authentication
 
-FamilyRepository
+Firebase Authentication
 
-MemberRepository
+Database
 
-MedicineRepository
+Firestore
 
-ReminderRepository
+Notifications
 
-NotificationRepository
+Firebase Cloud Messaging
 
-VoiceRepository
+Offline
 
-SyncRepository
-
-SettingsRepository
-
-AnalyticsRepository
-
-StorageRepository
-
-HealthRepository (Future)
-
-EmergencyRepository
+SQLite
 
 ---
 
-# AuthenticationRepository
+# Repository Contracts
 
-Purpose
+Every feature communicates only through Repository Interfaces.
 
-Manage authentication and user sessions.
+Presentation never communicates directly with Firebase.
 
-Methods
+---
 
-login(email, password)
+# Authentication API
 
-register(user)
+Repository
+
+IAuthenticationRepository
+
+Functions
+
+login()
+
+register()
 
 logout()
 
+verifyOTP()
+
+forgotPassword()
+
 refreshSession()
-
-forgotPassword(email)
-
-verifyOtp(code)
 
 getCurrentUser()
 
@@ -100,59 +124,65 @@ deleteAccount()
 
 ---
 
-# FamilyRepository
+# Family API
 
-Purpose
+Repository
 
-Manage family groups.
+IFamilyRepository
 
-Methods
+Functions
 
 createFamily()
 
-joinFamily()
+updateFamily()
 
-leaveFamily()
-
-inviteMember()
-
-removeMember()
+deleteFamily()
 
 getFamily()
 
-updateFamily()
+inviteMember()
 
----
+acceptInvitation()
 
-# MemberRepository
-
-Purpose
-
-Manage family members.
-
-Methods
-
-addMember()
-
-updateMember()
-
-deleteMember()
-
-getMember()
+removeMember()
 
 getMembers()
 
-assignRole()
+---
+
+# Patient API
+
+Repository
+
+IPatientRepository
+
+Functions
+
+createPatient()
+
+updatePatient()
+
+archivePatient()
+
+restorePatient()
+
+deletePatient()
+
+getPatient()
+
+getPatients()
+
+searchPatients()
 
 ---
 
-# MedicineRepository
+# Medicine API
 
-Purpose
+Repository
 
-Manage medicine records.
+IMedicineRepository
 
-Methods
+Functions
 
 createMedicine()
 
@@ -164,375 +194,295 @@ getMedicine()
 
 getMedicines()
 
-searchMedicines()
+pauseMedicine()
 
-archiveMedicine()
+resumeMedicine()
 
 ---
 
-# ReminderRepository
+# Reminder API
 
-Purpose
+Repository
 
-Manage reminder scheduling.
+IReminderRepository
 
-Methods
+Functions
 
 scheduleReminder()
 
 cancelReminder()
 
-updateReminder()
+rescheduleReminder()
 
-getReminder()
+confirmMedicine()
 
-getTodaysReminders()
-
-retryReminder()
-
-markCompleted()
+skipReminder()
 
 markMissed()
 
----
+getTodayReminders()
 
-# NotificationRepository
-
-Purpose
-
-Manage notifications.
-
-Methods
-
-scheduleLocal()
-
-cancel()
-
-sendRemote()
-
-markRead()
-
-getHistory()
+getReminderHistory()
 
 ---
 
-# VoiceRepository
+# Voice API
 
-Purpose
+Repository
 
-Handle voice interactions.
+IVoiceRepository
 
-Methods
+Functions
 
-playVoice()
+playReminder()
 
-recordVoice()
+stopReminder()
 
-startListening()
+changeLanguage()
 
-stopListening()
+updateVoiceSettings()
 
-analyzeSpeech()
-
-saveVoice()
-
-deleteVoice()
+previewVoice()
 
 ---
 
-# SyncRepository
+# Notification API
 
-Purpose
+Repository
 
-Synchronize local and cloud data.
+INotificationRepository
 
-Methods
+Functions
 
-syncAll()
+sendNotification()
 
-pushPending()
+scheduleNotification()
 
-pullLatest()
+cancelNotification()
 
-resolveConflicts()
+markAsRead()
 
-getQueue()
+getNotifications()
 
-retryFailed()
-
----
-
-# SettingsRepository
-
-Purpose
-
-Store application settings.
-
-Methods
-
-saveTheme()
-
-saveLanguage()
-
-savePreferences()
-
-getPreferences()
-
-reset()
+clearNotifications()
 
 ---
 
-# AnalyticsRepository
+# Report API
 
-Purpose
+Repository
 
-Generate reports.
+IReportRepository
 
-Methods
+Functions
 
-getDaily()
+generateDaily()
 
-getWeekly()
+generateWeekly()
 
-getMonthly()
+generateMonthly()
 
-getAdherence()
+medicineCompliance()
 
-exportReport()
+patientHistory()
 
----
-
-# StorageRepository
-
-Purpose
-
-Manage secure file storage.
-
-Methods
-
-uploadImage()
-
-deleteImage()
-
-downloadImage()
-
-getSignedUrl()
+dashboardSummary()
 
 ---
 
-# EmergencyRepository
+# Settings API
 
-Purpose
+Repository
 
-Emergency contacts and alerts.
+ISettingsRepository
 
-Methods
+Functions
 
-addContact()
+updateTheme()
 
-removeContact()
+changeLanguage()
 
-sendEmergencyAlert()
+updateProfile()
 
-getContacts()
+updateNotificationSettings()
 
----
+updateVoiceSettings()
 
-# Domain Models
-
-User
-
-Family
-
-FamilyMember
-
-Medicine
-
-Reminder
-
-ReminderHistory
-
-Notification
-
-VoiceProfile
-
-EmergencyContact
-
-AnalyticsReport
-
-SyncJob
-
-Settings
+logout()
 
 ---
 
-# Data Transfer Objects (DTOs)
+# Emergency API
 
-UserDto
+Repository
 
-FamilyDto
+IEmergencyRepository
 
-MedicineDto
+Functions
 
-ReminderDto
+sendSOS()
 
-NotificationDto
+callEmergencyContact()
 
-VoiceDto
+getEmergencyContacts()
 
-AnalyticsDto
-
-SettingsDto
+updateEmergencyContact()
 
 ---
 
-# Validation Rules
+# Authentication Flow
 
-Email
+Register
 
-Valid email format.
+↓
 
-Password
+Firebase Auth
 
-Minimum 8 characters.
+↓
 
-Medicine Name
+OTP
 
-Required.
+↓
 
-Maximum 100 characters.
+Firestore User
+
+↓
+
+Dashboard
+
+---
+
+Login
+
+↓
+
+Firebase Auth
+
+↓
+
+Load Profile
+
+↓
+
+Dashboard
+
+---
+
+# Family Flow
+
+Create Family
+
+↓
+
+Firestore
+
+↓
+
+Create Family Document
+
+↓
+
+Invite Members
+
+↓
+
+Join Family
+
+---
+
+# Patient Flow
+
+Create Patient
+
+↓
+
+Firestore
+
+↓
+
+SQLite
+
+↓
+
+Dashboard Refresh
+
+---
+
+# Medicine Flow
+
+Create Medicine
+
+↓
+
+Firestore
+
+↓
+
+SQLite
+
+↓
+
+Reminder Scheduler
+
+↓
+
+Notification Created
+
+---
+
+# Reminder Flow
 
 Reminder Time
 
-Must be a valid future time.
+↓
 
-Family Name
+Notifee
 
-Maximum 50 characters.
+↓
 
-Voice Recording
+Voice Reminder
 
-Maximum duration: 30 seconds.
+↓
 
----
+Taken
 
-# Error Codes
+↓
 
-AUTH_INVALID_CREDENTIALS
+History
 
-AUTH_SESSION_EXPIRED
+↓
 
-AUTH_EMAIL_ALREADY_EXISTS
-
-AUTH_ACCOUNT_DISABLED
-
-FAMILY_NOT_FOUND
-
-MEMBER_NOT_FOUND
-
-MEDICINE_NOT_FOUND
-
-REMINDER_NOT_FOUND
-
-VOICE_RECOGNITION_FAILED
-
-NOTIFICATION_FAILED
-
-SYNC_FAILED
-
-NETWORK_UNAVAILABLE
-
-UNKNOWN_ERROR
+Firestore Sync
 
 ---
 
-# Error Handling Rules
+# Offline API Strategy
 
-Infrastructure returns typed errors.
+SQLite always executes first.
 
-Application maps errors to business-friendly messages.
+↓
 
-Presentation displays localized messages.
+Pending Sync Queue
 
-Raw Firebase exceptions must never reach the UI.
+↓
 
----
+Internet Available
 
-# Firebase Collections
+↓
 
-users
+Firestore Update
 
-families
+↓
 
-family_members
-
-medicines
-
-reminders
-
-reminder_history
-
-notifications
-
-voice_profiles
-
-analytics
-
-settings
-
-sync_queue
-
-emergency_contacts
+Queue Cleared
 
 ---
 
-# Local SQLite Tables
-
-users
-
-families
-
-members
-
-medicines
-
-reminders
-
-history
-
-notifications
-
-sync_queue
-
-settings
-
----
-
-# API Versioning
-
-Current Version
-
-v1
-
-Breaking Changes
-
-Increase major version.
-
-Backward Compatible Changes
-
-Increase minor version.
-
-Bug Fixes
-
-Increase patch version.
-
----
-
-# Response Pattern
+# Standard Response
 
 Success
 
-status
+success
 
 message
 
@@ -542,106 +492,144 @@ timestamp
 
 Failure
 
-status
-
-message
+success
 
 errorCode
 
-details
+message
 
 timestamp
 
 ---
 
-# Pagination Standard
+# Error Codes
 
-page
+AUTH001
 
-pageSize
+Invalid Credentials
 
-totalItems
+AUTH002
 
-totalPages
+Session Expired
 
-hasNext
+PATIENT001
 
-hasPrevious
+Patient Not Found
 
----
+MED001
 
-# Security Rules
+Medicine Not Found
 
-Every request requires authentication unless explicitly public.
+REM001
 
-Validate all inputs.
+Reminder Failed
 
-Sanitize user-provided data.
+NET001
 
-Never expose internal IDs unnecessarily.
+No Internet
 
-Use HTTPS only.
+SYNC001
 
----
-
-# Logging Rules
-
-Never log:
-
-Passwords
-
-Tokens
-
-Medical data
-
-Voice recordings
-
-Personal information
-
-Log only operational and debugging information in development.
+Synchronization Failed
 
 ---
 
-# Testing Requirements
+# API Rules
 
-Every repository must have:
+Every repository must:
+
+Return typed models.
+
+Throw meaningful exceptions.
+
+Hide Firebase implementation.
+
+Support offline synchronization.
+
+Never expose SDK-specific code.
+
+---
+
+# Future REST Endpoints
+
+/auth/login
+
+/auth/register
+
+/auth/logout
+
+/families
+
+/patients
+
+/medicines
+
+/reminders
+
+/reports
+
+/settings
+
+/emergency
+
+These endpoints are reserved for future backend migration.
+
+---
+
+# API Version
+
+Current
+
+v1
+
+Future
+
+v2
+
+AI Features
+
+v3
+
+Healthcare Ecosystem
+
+---
+
+# Documentation Rule
+
+Every new repository must include:
+
+Interface
+
+Implementation
+
+Use Case
 
 Unit Tests
 
-Mock Implementations
+Documentation
 
-Integration Tests
-
-Repository Contract Tests
+No API is considered complete until documented.
 
 ---
 
-# Future Integrations
+# End of Document
 
-Apple Health
+Document Name
 
-Health Connect
+08_API.md
 
-Google Fit
+Version
 
-WearOS
+2.0
 
-Apple Watch
+Status
 
-Smart Devices
+Approved
 
-AI Assistant
+Project
 
-Doctor Portal
+Family Care
 
----
+Project Owner
 
-# API Principles
-
-Repositories are the single source of truth for data access.
-
-Domain models remain independent of external services.
-
-Infrastructure is replaceable without changing business logic.
-
-Every repository must be mockable and testable.
+Zaeem Ahmad

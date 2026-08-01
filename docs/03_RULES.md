@@ -1,346 +1,64 @@
 # Family Care
 
-# Development Rules
+# Development Rules & Coding Standards
 
-Version: 1.0
+Version: 2.0
 
-Status: Approved
+Status:
+Approved
 
-Author: Psychic Cyber + ChatGPT
-
----
-
-# Purpose
-
-This document defines mandatory engineering rules for everyone working on the project, including AI assistants.
-
-These rules are not optional.
-
-Every implementation must comply with them.
+Project Owner:
+Zaeem Ahmad
 
 ---
 
-# 1. General Rules
+# 1. Purpose
 
-Write clean code.
+This document defines the mandatory development rules for Family Care.
 
-Write readable code.
+Every contributor, developer and AI assistant must follow these rules.
 
-Prefer simplicity.
-
-Avoid premature optimization.
-
-Never duplicate code.
-
-Always favor maintainability over shortcuts.
+No feature may violate this document.
 
 ---
 
-# 2. Clean Architecture
+# 2. Core Philosophy
 
-Presentation can only communicate with Application.
+Family Care is designed to be:
 
-Application communicates with Domain.
+• Simple
 
-Domain communicates only through interfaces.
+• Professional
 
-Infrastructure implements interfaces.
+• Medical
 
-Presentation must never import Infrastructure directly.
+• Scalable
 
----
+• Maintainable
 
-# 3. Repository Pattern
+• Enterprise Ready
 
-Every data source must be hidden behind a Repository.
-
-Repositories expose interfaces.
-
-Firebase implementation must never leak outside Infrastructure.
-
-SQLite implementation must never leak outside Infrastructure.
+Every decision should support these goals.
 
 ---
 
-# 4. Dependency Injection
+# 3. Architecture Rule
 
-Never instantiate repositories directly inside UI.
+Family Care strictly follows
 
-Dependencies must be injected through the Composition Root.
+Clean Architecture
 
-Avoid global singleton objects unless absolutely required.
+combined with
 
----
+Feature First Architecture.
 
-# 5. UI Rules
-
-Every screen must be responsive.
-
-Support phones and tablets.
-
-Avoid fixed pixel sizes.
-
-Use theme spacing tokens.
-
-Never hardcode colors.
-
-Never hardcode fonts.
-
-Never hardcode dimensions.
+No shortcuts are allowed.
 
 ---
 
-# 6. Styling Rules
+# 4. Folder Rule
 
-Use NativeWind utilities where appropriate.
-
-Use React Native Paper for reusable components.
-
-All colors come from the theme.
-
-Support Dark Mode from day one.
-
----
-
-# 7. State Management
-
-Use TanStack Query for server state.
-
-Use React Hooks for local state.
-
-Avoid unnecessary global state.
-
-Do not introduce Redux unless there is a justified architectural need.
-
----
-
-# 8. Forms
-
-Use React Hook Form.
-
-Validate with Zod.
-
-Never perform manual validation inside UI components.
-
-Validation logic belongs in schemas.
-
----
-
-# 9. Error Handling
-
-Every async operation must handle errors.
-
-Never leave unhandled Promise rejections.
-
-Display user-friendly error messages.
-
-Never expose raw Firebase or API errors to users.
-
-Log technical details only in development.
-
----
-
-# 10. Logging
-
-Development:
-
-Verbose logs are allowed.
-
-Production:
-
-Only critical logs.
-
-Never log:
-
-Passwords
-
-Authentication tokens
-
-Medical information
-
-Personal data
-
-Firebase secrets
-
----
-
-# 11. Offline Rules
-
-All write operations must be stored locally first.
-
-Synchronization happens in the background.
-
-Never block the user because of missing internet.
-
-Queue failed operations.
-
-Retry automatically.
-
----
-
-# 12. Firebase Rules
-
-Firebase is Infrastructure only.
-
-No Firebase imports outside Infrastructure.
-
-Authentication logic stays inside Infrastructure.
-
-Firestore queries stay inside Infrastructure.
-
-Storage logic stays inside Infrastructure.
-
----
-
-# 13. SQLite Rules
-
-SQLite is the local source of truth.
-
-Never bypass repositories.
-
-Always use transactions when updating multiple related records.
-
----
-
-# 14. Networking
-
-Use Axios.
-
-Configure a single HTTP client.
-
-No duplicate API clients.
-
-Handle timeouts.
-
-Retry transient failures.
-
----
-
-# 15. Speech Recognition
-
-Use on-device recognition by default.
-
-Only use cloud recognition when:
-
-Internet is available
-
-AND
-
-Confidence is below the configured threshold.
-
-Cloud recognition must remain optional.
-
----
-
-# 16. Notifications
-
-Use Notifee.
-
-Schedule notifications locally whenever possible.
-
-Use Firebase Cloud Messaging only for remote events.
-
----
-
-# 17. Security
-
-HTTPS only.
-
-Encrypt sensitive local storage.
-
-Use Secure Storage for secrets.
-
-Never commit API keys.
-
-Never commit Firebase configuration secrets.
-
-Never commit certificates.
-
----
-
-# 18. Performance
-
-Avoid unnecessary re-renders.
-
-Memoize expensive components.
-
-Lazy load screens.
-
-Optimize FlatList usage.
-
-Avoid unnecessary animations.
-
-Keep bundle size small.
-
----
-
-# 19. Accessibility
-
-Support TalkBack.
-
-Support VoiceOver.
-
-Respect Dynamic Font Size.
-
-Minimum touch target: 44x44 dp.
-
-Every icon requires an accessibility label.
-
----
-
-# 20. Internationalization
-
-All visible strings must be translatable.
-
-Never hardcode user-facing text.
-
-Support English first.
-
-Architecture must support Urdu in the future.
-
----
-
-# 21. File Naming
-
-Components:
-
-PascalCase
-
-Example:
-
-MedicineCard.tsx
-
-Hooks:
-
-camelCase
-
-Example:
-
-useVoiceRecognition.ts
-
-Utilities:
-
-camelCase
-
-Example:
-
-dateFormatter.ts
-
-Types:
-
-PascalCase
-
-Example:
-
-Reminder.ts
-
----
-
-# 22. Folder Rules
-
-Each feature contains:
-
-presentation/
+Every feature MUST contain
 
 application/
 
@@ -348,114 +66,734 @@ domain/
 
 infrastructure/
 
-tests/
+presentation/
 
-Avoid dumping unrelated files into shared/.
-
----
-
-# 23. Code Quality
-
-Use ESLint.
-
-Use Prettier.
-
-Run lint before committing.
-
-Run type checking before committing.
-
-Do not ignore lint errors without justification.
+Nothing else should exist at feature root.
 
 ---
 
-# 24. Git Rules
+Application
 
-Small commits.
+Contains
 
-Clear commit messages.
+Use Cases
 
-One logical change per commit.
+Dependency Injection
 
-Never commit generated files unnecessarily.
-
-Never commit node_modules.
-
-Never commit secrets.
+Containers
 
 ---
 
-# 25. Testing Rules
+Domain
 
-Every business rule must have unit tests.
+Contains
 
-Critical flows require integration tests.
+Entities
 
-Major user journeys require E2E tests.
+Interfaces
 
-Bug fixes should include regression tests whenever practical.
+Validation
 
----
-
-# 26. AI Development Rules
-
-AI must never invent project requirements.
-
-AI must read the documentation before generating code.
-
-AI must not modify architecture without approval.
-
-AI must explain significant architectural changes.
-
-AI must not remove existing functionality without approval.
-
-AI must not rewrite large sections of code unless requested.
+Business Rules
 
 ---
 
-# 27. Documentation Rules
+Infrastructure
 
-Every major feature requires documentation.
+Contains
 
-Every architectural decision must be recorded.
+Firebase
 
-Every breaking change must be documented.
+SQLite
 
-Update Memory.md after completing each phase.
+Repositories
+
+Services
+
+Notification Engine
+
+Voice Engine
 
 ---
 
-# 28. Definition of Done
+Presentation
 
-A task is complete only when:
+Contains
 
-✓ Code compiles
+Screens
 
-✓ Lint passes
+Navigation
 
-✓ Type check passes
+Hooks
 
-✓ Tests pass
+Components
+
+View Logic
+
+No business logic.
+
+---
+
+# 5. Dependency Rule
+
+Allowed
+
+Presentation
+
+↓
+
+Application
+
+↓
+
+Domain
+
+↓
+
+Infrastructure
+
+Never
+
+Infrastructure
+
+↓
+
+Presentation
+
+Never
+
+Presentation
+
+↓
+
+Firebase
+
+Never
+
+Domain
+
+↓
+
+React Native
+
+---
+
+# 6. Naming Rules
+
+Folders
+
+lowercase
+
+authentication
+
+patients
+
+admin
+
+settings
+
+---
+
+Files
+
+PascalCase
+
+DashboardScreen.tsx
+
+LoginScreen.tsx
+
+MedicineCard.tsx
+
+ReminderService.ts
+
+---
+
+Interfaces
+
+Start with I
+
+Example
+
+IAuthRepository
+
+IPatientRepository
+
+---
+
+Hooks
+
+Start with use
+
+Example
+
+useLoginForm
+
+useReminder
+
+usePatient
+
+---
+
+Screens
+
+Always end with
+
+Screen
+
+Example
+
+DashboardScreen
+
+PatientsScreen
+
+---
+
+Components
+
+PascalCase
+
+AppCard
+
+AppAvatar
+
+MedicineCard
+
+GreetingCard
+
+---
+
+# 7. Import Rules
+
+Correct
+
+React
+
+↓
+
+Third Party
+
+↓
+
+Shared Components
+
+↓
+
+Hooks
+
+↓
+
+Feature Imports
+
+↓
+
+Local Imports
+
+Never random imports.
+
+---
+
+# 8. Component Rules
+
+Reusable UI belongs inside
+
+src/components
+
+Feature-specific UI belongs inside
+
+feature/presentation/components
+
+Never duplicate components.
+
+Reuse existing ones.
+
+---
+
+# 9. Theme Rules
+
+Never hardcode colors.
+
+Never hardcode spacing.
+
+Never hardcode radius.
+
+Always use
+
+Colors
+
+Spacing
+
+Radius
+
+Typography
+
+Elevation
+
+useAppTheme()
+
+---
+
+Incorrect
+
+backgroundColor:"#00FF00"
+
+Correct
+
+backgroundColor:colors.primary
+
+---
+
+# 10. Screen Rules
+
+Every screen should
+
+Use SafeArea
+
+Support Dark Theme
+
+Support Light Theme
+
+Use reusable components
+
+Remain responsive
+
+Avoid unnecessary nesting
+
+---
+
+# 11. Font Rules
+
+Family Care targets elderly users.
+
+Fonts must be
+
+Readable
+
+Balanced
+
+Professional
+
+Never
+
+Too Small
+
+Never
+
+Too Large
+
+Titles
+
+Medium
+
+Body
+
+Normal
+
+Buttons
+
+Medium Weight
+
+---
+
+# 12. Medical Design Rules
+
+Application should feel
+
+Clean
+
+Soft
+
+Premium
+
+Professional
+
+Comfortable
+
+Medical
+
+Rounded Cards
+
+Soft Shadows
+
+Simple Icons
+
+Minimal Text
+
+No visual clutter.
+
+---
+
+# 13. Button Rules
+
+Buttons should have
+
+Consistent Height
+
+Consistent Radius
+
+Loading State
+
+Disabled State
+
+Icon Support
+
+Every action button should clearly communicate its purpose.
+
+---
+
+# 14. Form Rules
+
+Every form must include
+
+Validation
+
+Loading
+
+Error Message
+
+Success Feedback
+
+No form may submit invalid data.
+
+---
+
+# 15. Error Handling Rules
+
+Never show raw Firebase errors.
+
+Never expose technical messages.
+
+Convert technical errors into friendly messages.
+
+Example
+
+Incorrect
+
+FirebaseAuthException
+
+Correct
+
+Invalid email or password.
+
+---
+
+# 16. Repository Rules
+
+Every external service must be hidden behind repositories.
+
+Presentation never communicates directly with Firebase.
+
+---
+
+# 17. Use Case Rules
+
+Every user action equals one Use Case.
+
+Examples
+
+Login
+
+Logout
+
+CreateFamily
+
+InviteMember
+
+AddPatient
+
+DeletePatient
+
+ScheduleReminder
+
+ConfirmMedicine
+
+Each Use Case performs one responsibility only.
+
+---
+
+# 18. Validation Rules
+
+Validation belongs only inside Domain.
+
+Use
+
+Zod
+
+Never validate inside UI.
+
+---
+
+# 19. Firebase Rules
+
+Firebase SDK belongs only inside
+
+Infrastructure
+
+Never inside
+
+Presentation
+
+Never inside
+
+Domain
+
+---
+
+# 20. SQLite Rules
+
+SQLite stores
+
+Patients
+
+Medicines
+
+Schedules
+
+History
+
+Pending Sync
+
+Never access SQLite directly from UI.
+
+---
+
+# 21. Reminder Rules
+
+Reminder Engine must support
+
+Offline
+
+Repeat Reminder
+
+Voice Reminder
+
+Missed Detection
+
+History
+
+Caregiver Alert
+
+---
+
+# 22. Voice Reminder Rules
+
+Voice reminder should
+
+Respect language
+
+Respect volume
+
+Support Android
+
+Support iPhone
+
+Remain optional
+
+---
+
+# 23. Navigation Rules
+
+All navigation belongs inside
+
+presentation/navigation
+
+No navigation logic inside Use Cases.
+
+---
+
+# 24. Documentation Rules
+
+Every feature requires updates to
+
+PRD
+
+Architecture
+
+Database
+
+API
+
+Session
+
+No documentation
+
+↓
+
+Feature is not complete.
+
+---
+
+# 25. Git Rules
+
+Every completed task
+
+↓
+
+git add
+
+↓
+
+git commit
+
+↓
+
+git push
+
+Commit format
+
+feat:
+
+fix:
+
+docs:
+
+style:
+
+refactor:
+
+Example
+
+feat(medicine): implement reminder scheduling
+
+---
+
+# 26. Testing Rules
+
+Every feature must be tested on
+
+Android
+
+iPhone
+
+Dark Theme
+
+Light Theme
+
+Offline Mode
+
+No feature is complete without testing.
+
+---
+
+# 27. Performance Rules
+
+Avoid unnecessary re-renders.
+
+Avoid duplicated state.
+
+Lazy load heavy screens.
+
+Reuse components.
+
+Optimize FlatList.
+
+---
+
+# 28. AI Assistant Rules
+
+Every AI assistant working on Family Care must:
+
+Read documentation first.
+
+Follow Clean Architecture.
+
+Never create duplicate code.
+
+Never break folder structure.
+
+Never hardcode values.
+
+Always reuse existing components.
+
+Always preserve project architecture.
+
+Always prefer maintainability over shortcuts.
+
+---
+
+# 29. Future Development Rules
+
+Future features
+
+AI
+
+OCR
+
+Doctor Portal
+
+Wearables
+
+Reports
+
+Emergency
+
+must follow the same architecture.
+
+No exceptions.
+
+---
+
+# 30. Definition of Done
+
+A feature is complete only if
+
+✓ UI completed
+
+✓ Business Logic completed
+
+✓ Offline support verified
+
+✓ TypeScript has zero errors
+
+✓ Android tested
+
+✓ iPhone tested
 
 ✓ Documentation updated
 
-✓ No TODO placeholders remain
+✓ Git committed
 
-✓ No debug logs remain
-
-✓ Feature reviewed
+✓ GitHub pushed
 
 ---
 
-# Final Principle
+# 31. Final Rule
 
-The project values:
+When in doubt,
 
-Correctness over speed.
+choose
 
-Maintainability over cleverness.
+simplicity,
 
-Scalability over shortcuts.
+consistency,
 
-Reliability over temporary fixes.
+maintainability,
 
-Patient safety and data integrity always take priority over convenience.
+and user experience
+
+over shortcuts.
+
+Family Care should always remain a premium healthcare application.
+
+---
+
+End of Document
+
+Document Name
+
+03_RULES.md
+
+Version
+
+2.0
+
+Status
+
+Approved
+
+Project Owner
+
+Zaeem Ahmad
+
+Project
+
+Family Care

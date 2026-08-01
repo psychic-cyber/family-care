@@ -1,724 +1,711 @@
 # Family Care
 
-# Architecture & Technical Decisions
+# Architecture Decision Records (ADR)
 
-Version: 1.0
+Version: 2.0
 
-Status: Active
+Status
 
-Author: Psychic Cyber + ChatGPT
+Approved
 
-Last Updated: July 2026
+Project Owner
+
+Zaeem Ahmad
 
 ---
 
 # Purpose
 
-This document records important technical and architectural decisions.
+This document records every major technical and architectural decision made during the development of Family Care.
 
-Every significant decision must include:
+Every important decision must be documented here.
 
-- Decision
-- Reason
-- Alternatives Considered
-- Consequences
-- Status
-
-Once accepted, a decision should not be changed without discussion.
+No major architectural change should occur without updating this document.
 
 ---
 
-# Decision Template
+# ADR-001
 
-Decision ID:
+Decision
 
-Status:
-
-Date:
-
-Decision:
-
-Reason:
-
-Alternatives:
-
-Consequences:
-
----
-
-# FC-001
+React Native CLI
 
 Status
 
 Accepted
 
-Decision
-
-Use React Native CLI instead of Expo.
-
 Reason
 
-The application requires native modules such as:
+Cross-platform development.
 
-- Notifee
-- SQLite
-- MMKV
-- Speech Recognition
-- Advanced Notifications
+Native performance.
 
-These are easier to integrate and maintain with React Native CLI.
+Large community support.
 
-Alternatives
+Easy Firebase integration.
 
-- Expo
-- Expo Bare Workflow
+Easy native module integration.
 
-Consequences
+Alternatives Considered
 
-More native setup.
+Flutter
 
-Greater flexibility.
+Expo
 
-Better long-term scalability.
+Native Android
+
+Native iOS
+
+Result
+
+React Native CLI selected.
 
 ---
 
-# FC-002
+# ADR-002
+
+Decision
+
+TypeScript
 
 Status
 
 Accepted
 
-Decision
-
-Use TypeScript across the entire project.
-
 Reason
 
-Provides type safety, better tooling, and easier maintenance.
+Strong typing.
+
+Better scalability.
+
+Safer refactoring.
+
+Enterprise standard.
 
 Alternatives
 
 JavaScript
 
-Consequences
+Result
 
-Slightly more verbose code.
-
-Significantly fewer runtime errors.
+Entire project uses TypeScript.
 
 ---
 
-# FC-003
+# ADR-003
+
+Decision
+
+Clean Architecture
 
 Status
 
 Accepted
 
-Decision
-
-Follow Clean Architecture.
-
 Reason
 
-Separates business logic from UI and infrastructure.
+Maintainability.
 
-Improves testing and maintainability.
+Scalability.
 
-Alternatives
+Easy testing.
 
-MVC
+Separation of concerns.
 
-MVVM
+Result
 
-Feature-only architecture
-
-Consequences
-
-More initial setup.
-
-Cleaner long-term codebase.
+Entire application follows Clean Architecture.
 
 ---
 
-# FC-004
+# ADR-004
+
+Decision
+
+Feature First Architecture
 
 Status
 
 Accepted
 
-Decision
-
-Adopt Feature-First folder structure.
-
 Reason
 
-Each feature remains self-contained.
+Independent modules.
 
-Improves scalability.
+Easy maintenance.
 
-Alternatives
+Large project friendly.
 
-Layer-first structure
+Better organization.
 
-Consequences
+Result
 
-More folders.
-
-Easier ownership and navigation.
+Every feature owns its own architecture.
 
 ---
 
-# FC-005
+# ADR-005
+
+Decision
+
+Documentation First Development
 
 Status
 
 Accepted
 
-Decision
-
-Use Repository Pattern.
-
 Reason
 
-Hide Firebase and SQLite behind interfaces.
+Project requirements remain clear.
 
-Business logic remains independent of implementation details.
+Architecture stays consistent.
 
-Alternatives
+Future contributors understand the project quickly.
 
-Direct Firebase calls
+Result
 
-Consequences
-
-Additional abstraction.
-
-Much easier testing and future backend replacement.
+Documentation is always written before implementation.
 
 ---
 
-# FC-006
+# ADR-006
+
+Decision
+
+Firebase Authentication
 
 Status
 
 Accepted
 
-Decision
-
-Use Firebase Authentication.
-
 Reason
 
-Reliable authentication with minimal backend maintenance.
+Reliable authentication.
+
+OTP support.
+
+Email support.
+
+Google Sign-In support.
+
+Apple Sign-In support.
+
+Secure.
 
 Alternatives
 
-Custom authentication server
-
-Auth0
-
-Supabase Auth
-
-Consequences
-
-Vendor dependency.
-
-Rapid development.
-
----
-
-# FC-007
-
-Status
-
-Accepted
-
-Decision
-
-Use Cloud Firestore.
-
-Reason
-
-Real-time synchronization and offline support.
-
-Alternatives
-
-REST API
-
-PostgreSQL
+Custom Authentication
 
 Supabase
 
+AWS Cognito
+
+Result
+
+Firebase Authentication selected.
+
+---
+
+# ADR-007
+
+Decision
+
+Cloud Firestore
+
+Status
+
+Accepted
+
+Reason
+
+Real-time synchronization.
+
+Offline caching.
+
+Excellent React Native support.
+
+Scalable.
+
+Alternatives
+
 MongoDB
 
-Consequences
+Supabase
 
-Firestore pricing considerations.
+MySQL
 
-Excellent developer experience.
+Result
 
----
-
-# FC-008
-
-Status
-
-Accepted
-
-Decision
-
-SQLite is the local database.
-
-Reason
-
-Reliable relational storage.
-
-Excellent offline support.
-
-Alternatives
-
-Realm
-
-WatermelonDB
-
-AsyncStorage
-
-Consequences
-
-Need schema migrations.
-
-Robust local persistence.
+Firestore selected.
 
 ---
 
-# FC-009
-
-Status
-
-Accepted
+# ADR-008
 
 Decision
-
-MMKV stores lightweight application preferences.
-
-Reason
-
-Fast key-value storage.
-
-Alternatives
-
-AsyncStorage
-
-Consequences
-
-Additional dependency.
-
-High performance.
-
----
-
-# FC-010
-
-Status
-
-Accepted
-
-Decision
-
-Secure credentials are stored using Secure Storage.
-
-Reason
-
-Sensitive information must not be stored in plaintext.
-
-Alternatives
-
-MMKV only
 
 SQLite
 
-Consequences
+Status
 
-Platform-specific implementation.
+Accepted
 
-Better security.
+Reason
+
+Offline storage.
+
+Fast queries.
+
+Reliable local persistence.
+
+Medicine reminders continue without internet.
+
+Alternatives
+
+AsyncStorage
+
+MMKV
+
+Realm
+
+Result
+
+SQLite selected as the primary local database.
 
 ---
 
-# FC-011
+# ADR-009
+
+Decision
+
+MMKV
 
 Status
 
 Accepted
 
-Decision
-
-Use TanStack Query for server state.
-
 Reason
 
-Caching, retries, synchronization, and request management.
+Very fast.
 
-Alternatives
+Ideal for settings.
 
-Redux Toolkit Query
+Ideal for authentication tokens.
 
-SWR
+Result
 
-Manual API management
+MMKV stores lightweight local preferences.
 
-Consequences
-
-Learning curve.
-
-Excellent scalability.
+SQLite stores application data.
 
 ---
 
-# FC-012
+# ADR-010
+
+Decision
+
+Repository Pattern
 
 Status
 
 Accepted
 
-Decision
-
-Use React Hook Form with Zod.
-
 Reason
 
-Simple forms with schema validation.
+Loose coupling.
 
-Alternatives
+Easy testing.
 
-Formik
+Future backend replacement.
 
-Manual validation
+Result
 
-Consequences
-
-Additional dependencies.
-
-Cleaner validation.
+Presentation never accesses Firebase directly.
 
 ---
 
-# FC-013
+# ADR-011
+
+Decision
+
+React Hook Form
 
 Status
 
 Accepted
 
-Decision
-
-Use Notifee for local notifications.
-
 Reason
 
-Advanced scheduling and notification management.
+Performance.
 
-Alternatives
+Minimal re-renders.
 
-react-native-push-notification
+Simple validation integration.
 
-Native APIs
+Result
 
-Consequences
-
-Additional native dependency.
-
-More reliable reminder system.
+All forms use React Hook Form.
 
 ---
 
-# FC-014
+# ADR-012
+
+Decision
+
+Zod Validation
 
 Status
 
 Accepted
 
-Decision
-
-Use React Native Voice for speech recognition.
-
 Reason
 
-Cross-platform speech recognition.
+Type-safe validation.
 
-Alternatives
-
-Native Android APIs
-
-Native iOS APIs
-
-Cloud-only speech
-
-Consequences
-
-Platform differences.
+Reusable schemas.
 
 Simple integration.
 
+Result
+
+Validation resides inside the Domain layer.
+
 ---
 
-# FC-015
+# ADR-013
+
+Decision
+
+Material Community Icons
 
 Status
 
 Accepted
 
+Reason
+
+Large icon library.
+
+Medical friendly.
+
+Cross-platform consistency.
+
+Result
+
+Single icon library across the project.
+
+---
+
+# ADR-014
+
 Decision
 
-Adopt Offline-First architecture.
+Medical Design Language
+
+Status
+
+Accepted
+
+Reason
+
+Application targets healthcare.
+
+Clean interface.
+
+Comfortable for elderly users.
+
+Premium appearance.
+
+Result
+
+All screens follow the approved Light and Dark Theme mockups.
+
+---
+
+# ADR-015
+
+Decision
+
+Administrator & Parent Separation
+
+Status
+
+Accepted
+
+Reason
+
+Caregivers need advanced management.
+
+Parents need simplicity.
+
+Result
+
+Two different user experiences.
+
+Administrator
+
+Full dashboard.
+
+Parent
+
+Simplified interface.
+
+---
+
+# ADR-016
+
+Decision
+
+Voice Reminder
+
+Status
+
+Accepted
+
+Reason
+
+Many elderly users forget medicine.
+
+Voice is easier than reading notifications.
+
+Personalized reminders improve adherence.
+
+Result
+
+Voice reminders are a core feature.
+
+---
+
+# ADR-017
+
+Decision
+
+Offline First
+
+Status
+
+Accepted
 
 Reason
 
 Medicine reminders must work without internet.
 
-Alternatives
+Parents should never miss medicine because of connectivity issues.
 
-Online-only architecture
+Result
 
-Consequences
-
-Requires synchronization logic.
-
-Much better reliability.
+SQLite + local notifications continue working offline.
 
 ---
 
-# FC-016
+# ADR-018
+
+Decision
+
+Light Theme & Dark Theme
 
 Status
 
 Accepted
 
-Decision
-
-Every feature must include tests.
-
 Reason
 
-Healthcare-related functionality requires high reliability.
+User preference.
 
-Alternatives
+Accessibility.
 
-Manual testing only.
+Modern mobile experience.
 
-Consequences
+Result
 
-More development time.
-
-Higher confidence.
+Every screen supports both themes.
 
 ---
 
-# Pending Decisions
+# ADR-019
 
-FC-019
-FC-020
-FC-021
-FC-022
+Decision
 
----
-
-## FC-017
+Reusable Component Library
 
 Status
 
 Accepted
 
-Decision
-
-Use a Monorepo structure with the React Native application inside the `mobile/` directory.
-
 Reason
 
-Allows project documentation, assets, scripts, CI/CD, and future backend services to live in a single repository.
+Reduce duplicate code.
 
-Alternatives
+Maintain consistent UI.
 
-- Mobile project as repository root
-- Separate repositories
+Speed up development.
 
-Consequences
+Result
 
-Slightly more folder nesting.
+Shared components stored under
 
-Much easier long-term maintenance and scalability.
+src/components/common
 
 ---
 
-## FC-018
+# ADR-020
+
+Decision
+
+Bottom Tab Navigation
 
 Status
 
 Accepted
 
+Reason
+
+Simple navigation.
+
+Easy for elderly users.
+
+Matches Android and iOS conventions.
+
+Result
+
+Dashboard
+
+Patients
+
+Medicines
+
+Alerts
+
+Profile
+
+remain the primary navigation.
+
+---
+
+# ADR-021
+
 Decision
 
-Use the repository root as the Git repository.
+Documentation Updates
+
+Status
+
+Mandatory
 
 Reason
 
-Track documentation, GitHub workflows, scripts, assets, and mobile application together.
+Documentation must always match implementation.
 
-Alternatives
+Result
 
-Git initialized only inside `mobile/`.
+Every completed feature requires documentation updates before Git push.
 
-Consequences
+---
 
-Better version control.
+# ADR-022
 
-Professional monorepo workflow.
+Decision
 
-----
-
-# FC-019
+AI Ready Architecture
 
 Status
 
 Accepted
 
-Decision
-
-Use a centralized Design Token system for all UI styling.
-
 Reason
 
-Ensures visual consistency and prevents hardcoded design values across the application.
+Future AI features should integrate without major refactoring.
 
-Alternatives
+Examples
 
-- Hardcoded values
-- Per-component styling
+Health summaries.
 
-Consequences
+Medicine explanations.
 
-Improved maintainability.
+AI assistant.
 
-Single source of truth for UI.
+Voice assistant.
+
+Result
+
+Architecture remains extensible.
 
 ---
 
-# FC-020
+# ADR-023
+
+Decision
+
+Project Principle
 
 Status
 
-Accepted
+Permanent
 
-Decision
+Principles
 
-Documentation must be updated before and after every feature implementation.
+Simplicity over complexity.
 
-Reason
+Maintainability over shortcuts.
 
-Keeps implementation synchronized with project documentation and prevents architectural drift.
+Consistency over creativity.
 
-Alternatives
+Accessibility over visual effects.
 
-Documentation at project completion only.
+User trust over unnecessary features.
 
-Consequences
+Medical safety over convenience.
 
-Slightly more work during development.
-
-Much better long-term maintainability.
+These principles must never change.
 
 ---
 
-## FC-021
+# Decision Review Policy
+
+Every new architectural decision must include:
+
+Decision
+
+Reason
+
+Alternatives
+
+Impact
 
 Status
 
-Accepted
-
-Decision
-
-Build reusable UI components before integrating business logic.
-
-Reason
-
-Stable and reusable components reduce future refactoring and simplify form integration.
-
-Alternatives
-
-Develop forms directly with inline components.
-
-Consequences
-
-Slightly more initial work.
-
-Cleaner architecture and better maintainability.
+Implementation Date
 
 ---
 
-# FC-022
+# Current ADR Count
+
+23
 
 Status
 
-Accepted
-
-Decision
-
-All application colors, spacing, typography, radius and elevation values must come from Theme Tokens.
-
-Reason
-
-Implements the Design System defined in the project documentation.
-
-Alternatives
-
-Direct values inside components.
-
-Consequences
-
-Consistent UI.
-
-Simpler theme changes.
-
-Supports Light and Dark themes.
+Approved
 
 ---
 
-# Pending Decisions
+End of Document
 
-FC-023
+Document Name
 
-Notification scheduling strategy.
+07_DECISIONS.md
 
----
+Version
 
-FC-024
+2.0
 
-Offline synchronization conflict resolution.
+Status
 
----
+Approved
 
-# Decision History
+Project
 
-| ID | Decision | Status |
-|----|----------|--------|
-| FC-001 | React Native CLI | Accepted |
-| FC-002 | TypeScript | Accepted |
-| FC-003 | Clean Architecture | Accepted |
-| FC-004 | Feature-First Structure | Accepted |
-| FC-005 | Repository Pattern | Accepted |
-| FC-006 | Firebase Authentication | Accepted |
-| FC-007 | Cloud Firestore | Accepted |
-| FC-008 | SQLite | Accepted |
-| FC-009 | MMKV | Accepted |
-| FC-010 | Secure Storage | Accepted |
-| FC-011 | TanStack Query | Accepted |
-| FC-012 | React Hook Form + Zod | Accepted |
-| FC-013 | Notifee | Accepted |
-| FC-014 | React Native Voice | Accepted |
-| FC-015 | Offline-First | Accepted |
-| FC-016 | Testing Required | Accepted |
-| FC-017 | Monorepo Structure | Accepted |
-| FC-018 | Git Repository Root | Accepted |
-| FC-019 | Design Token System | Accepted |
-| FC-020 | Documentation-First Workflow | Accepted |
-| FC-021 | Navigation Before Features | Accepted |
-| FC-022 | Theme Tokens Only | Accepted |
+Family Care
+
+Project Owner
+
+Zaeem Ahmad

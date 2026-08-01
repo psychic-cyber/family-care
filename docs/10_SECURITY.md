@@ -1,98 +1,68 @@
 # Family Care
 
-# Security Architecture
+# Security Design Document
 
-Version: 1.0
+Version: 2.0
 
-Status: Approved
+Status
 
-Author: Psychic Cyber + ChatGPT
+Approved
 
-Last Updated: July 2026
+Project Owner
+
+Zaeem Ahmad
 
 ---
 
 # Purpose
 
-This document defines the security architecture of the Family Care application.
+This document defines the complete security architecture of Family Care.
 
-Security is a core requirement because the application stores sensitive personal and medical information.
+The objective is to protect:
 
-The goal is to protect confidentiality, integrity, and availability while keeping the application easy to use.
+• User Accounts
+
+• Family Information
+
+• Patient Information
+
+• Medicine Data
+
+• Reminder History
+
+• Emergency Contacts
+
+• Health Records
+
+The application follows the principle of
+
+Privacy First.
 
 ---
 
 # Security Principles
 
-Security by Design
+Family Care follows these principles.
 
 Least Privilege
-
-Defense in Depth
 
 Zero Trust
 
 Privacy First
 
-Fail Secure
+Secure by Default
 
-Secure Defaults
+Defense in Depth
 
----
+Offline Safety
 
-# Data Classification
-
-## Public
-
-Application version
-
-Help pages
-
-Documentation
-
----
-
-## Internal
-
-Application logs
-
-Analytics
-
-Crash reports
-
----
-
-## Sensitive
-
-User profile
-
-Medicine schedule
-
-Reminder history
-
-Emergency contacts
-
-Family relationships
-
----
-
-## Highly Sensitive
-
-Authentication credentials
-
-Access tokens
-
-Refresh tokens
-
-Voice recordings
-
-Encryption keys
+Every new feature must follow these principles.
 
 ---
 
 # Authentication
 
-Provider
+Authentication Provider
 
 Firebase Authentication
 
@@ -100,409 +70,472 @@ Supported Methods
 
 Email & Password
 
-Password Reset
-
 Email Verification
 
-Future Support
+Password Reset
 
-Google Sign-In
+Future
 
-Apple Sign-In
+Google Sign In
+
+Apple Sign In
 
 Phone Authentication
 
----
-
-# Session Management
-
-Access tokens are managed by Firebase.
-
-The application must never manually store Firebase refresh tokens.
-
-Sessions should be restored automatically after app restart.
-
-Logout clears all sensitive cached data.
+Multi Factor Authentication
 
 ---
 
 # Authorization
 
-Role-Based Access Control (RBAC)
+Every authenticated user has a role.
 
-Roles
+Current Roles
 
 Administrator
 
 Parent
 
-Child
+Future Roles
 
-Caregiver
+Secondary Caregiver
 
-Permissions are checked in the Application Layer and enforced by Firestore Security Rules.
+Doctor
+
+Hospital
+
+System Administrator
+
+Permissions are role-based.
+
+---
+
+# Family Isolation
+
+Each family is completely isolated.
+
+One family cannot:
+
+View another family's data.
+
+Modify another family's records.
+
+Access another family's reminders.
+
+Access another family's reports.
+
+Every Firestore query must be scoped by
+
+familyId.
+
+---
+
+# Firestore Security Rules
+
+Every document must verify:
+
+Authentication
+
+Family Ownership
+
+User Permission
+
+Example
+
+Allow Read
+
+If
+
+request.auth != null
+
+AND
+
+familyId == request.auth.familyId
+
+Only authorized users can access documents.
 
 ---
 
 # Secure Storage
 
-Use platform secure storage for:
+SQLite stores
 
-Authentication state
+Patients
 
-Encryption keys
+Medicines
 
-Sensitive configuration
+Schedules
 
-Never store these items in SQLite or MMKV.
+History
 
----
+Reports Cache
 
-# Local Storage Rules
+Pending Sync
 
-SQLite
-
-Stores application data.
-
-No passwords.
-
-No authentication secrets.
-
-MMKV
-
-Stores non-sensitive preferences only.
-
-Examples:
+MMKV stores
 
 Theme
 
 Language
 
-Font size
+Voice Settings
 
-Notification preferences
+Session Information
 
----
+Authentication Tokens
 
-# Encryption
-
-Data in Transit
-
-HTTPS only
-
-TLS 1.2 or higher
-
-Certificate validation required
-
-Data at Rest
-
-Secure Storage for secrets
-
-Optional encrypted SQLite in future versions
-
-Never implement custom encryption algorithms.
+Sensitive information should never be stored in plain text.
 
 ---
 
-# Firestore Security
+# Network Security
 
-Every document belongs to an authenticated user.
+All communication must use HTTPS.
 
-Users cannot access another family's data.
+No insecure HTTP requests.
 
-Security Rules must validate:
+Certificates must be validated.
 
-Authentication
+API keys must never be hardcoded.
 
-Ownership
-
-Role
-
-Family membership
+Secrets must never be committed to Git.
 
 ---
 
-# Input Validation
+# Environment Variables
 
-Validate all user input.
+Sensitive configuration belongs inside
 
-Use Zod schemas.
+.env
 
-Reject invalid data before it reaches repositories.
+Examples
 
-Never trust client input.
+Firebase Keys
+
+API Keys
+
+Future AI Keys
+
+Never commit production secrets.
 
 ---
 
 # Password Policy
 
-Minimum length
+Minimum
 
-8 characters
+8 Characters
 
-Recommended
-
-12+ characters
-
-Encourage:
+Require
 
 Uppercase
 
 Lowercase
 
-Numbers
+Number
 
-Symbols
+Special Character
 
-Never display passwords.
+Passwords are never stored by the application.
 
-Never log passwords.
+Firebase Authentication manages password security.
 
 ---
 
-# Voice Recording Security
+# Session Management
 
-Voice recordings belong only to the owning family.
+User sessions should:
 
-Access is restricted by authentication and authorization.
+Restore automatically.
 
-Voice recordings must never appear in logs.
+Expire securely.
 
-Delete recordings permanently when the user removes them.
+Logout from all devices when requested.
+
+Clear local session after logout.
+
+---
+
+# Local Database Protection
+
+SQLite contains sensitive medical data.
+
+Requirements
+
+Never expose database files.
+
+Never log medical records.
+
+Protect database access through repositories.
+
+Future
+
+Encrypted SQLite
+
+---
+
+# Logging Rules
+
+Never log
+
+Passwords
+
+OTP Codes
+
+Medical Information
+
+Tokens
+
+Authentication Headers
+
+PII
+
+Logs should contain only technical information required for debugging.
 
 ---
 
 # Notification Security
 
-Reminder notifications should not expose sensitive medical details on the lock screen unless the user explicitly enables this option.
+Notifications must never expose excessive medical information on the lock screen.
 
-Provide configurable privacy levels.
+Example
 
----
+Good
 
-# Logging Policy
+Medicine reminder available.
 
-Development
+Open Family Care.
 
-Verbose logging allowed.
+Avoid
 
-Production
+Take Diabetes Medicine 500mg now.
 
-Errors only.
-
-Never log:
-
-Passwords
-
-Tokens
-
-Medicine details
-
-Emergency contacts
-
-Voice recordings
-
-Personal information
+Detailed information should appear only after unlocking the device.
 
 ---
 
-# Error Handling
+# Voice Reminder Privacy
 
-Show friendly messages to users.
+Voice reminders should respect user privacy.
 
-Hide internal implementation details.
+Voice reminders may be disabled.
 
-Never expose stack traces.
+Voice language is configurable.
 
-Never expose Firebase exceptions.
+Volume follows device settings.
 
----
-
-# Rate Limiting
-
-Protect authentication operations.
-
-Examples:
-
-Login
-
-Password reset
-
-Invitation acceptance
-
-Future backend APIs must enforce rate limiting.
+Public disclosure of sensitive information should be minimized.
 
 ---
 
-# Device Security
+# Offline Security
 
-Detect rooted or jailbroken devices where practical.
+Offline mode must continue functioning securely.
 
-Warn the user that security guarantees may be reduced.
+Requirements
 
-Do not automatically block usage unless required by policy.
+Local validation
 
----
+Secure storage
 
-# Backup & Recovery
+Pending sync queue
 
-Cloud synchronization through Firestore.
+Automatic synchronization
 
-Sensitive credentials are never included in backups.
-
-Support secure account recovery through Firebase Authentication.
+No data loss
 
 ---
 
-# Privacy
+# Backup Strategy
 
-Collect only the data required for application functionality.
+Firestore
 
-Provide users with the ability to:
+Cloud Backup
 
-Export their data
+SQLite
 
-Delete their account
+Rebuilt after synchronization
 
-Delete their family data
+MMKV
 
-Comply with GDPR principles where applicable.
+Preference Storage
+
+Future
+
+Encrypted Local Backup
 
 ---
 
-# Permissions
+# Data Retention
 
-Android
+Medicine History
+
+12 Months
+
+Reports
+
+24 Months
 
 Notifications
 
-Microphone
+90 Days
 
-Internet
+Pending Sync
 
-Network State
+Until Successful Synchronization
 
-Exact Alarm (if required)
-
-iOS
-
-Notifications
-
-Microphone
-
-Background Refresh (if needed)
-
-Permissions should be requested only when required.
-
-Explain clearly why each permission is needed.
+Future versions may allow user-controlled retention settings.
 
 ---
 
-# Dependency Security
+# Account Deletion
 
-Regularly update dependencies.
+Users may request account deletion.
 
-Monitor security advisories.
+Deletion process
 
-Remove unused packages.
+Verify Identity
 
-Pin critical dependency versions.
+↓
 
----
+Remove Authentication
 
-# Secure Development Practices
+↓
 
-Use ESLint
+Delete Cloud Data
 
-Use TypeScript
+↓
 
-Run unit tests
+Clear Local Database
 
-Run dependency audits
+↓
 
-Review pull requests
+Clear Session
 
-Never commit secrets
+↓
 
-Use environment variables
-
----
-
-# Incident Response
-
-If a security issue is discovered:
-
-Assess impact
-
-Fix the issue
-
-Create regression tests
-
-Document the incident
-
-Release a patch
+Logout
 
 ---
 
-# OWASP Mobile Alignment
+# Emergency Security
 
-The project should follow the OWASP Mobile Application Security Verification Standard (MASVS).
+SOS actions require confirmation.
 
-Key focus areas:
+Emergency contacts are editable only by authorized caregivers.
 
-Secure Authentication
-
-Secure Data Storage
-
-Secure Network Communication
-
-Code Quality
-
-Input Validation
-
-Cryptography
-
-Privacy
+Emergency events are logged.
 
 ---
 
-# Future Security Enhancements
+# AI Security (Future)
 
-Biometric Authentication
+AI services must never receive unnecessary personal information.
 
-Encrypted SQLite
+Only the minimum required data should be processed.
 
-Certificate Pinning
+AI features must require explicit user consent where appropriate.
 
-Hardware-backed key storage
+---
 
-Remote session revocation
+# Security Testing
 
-Security event monitoring
+Every release must verify
+
+Authentication
+
+Authorization
+
+Offline Security
+
+Database Protection
+
+Firestore Rules
+
+Notification Privacy
+
+Session Management
+
+Role Permissions
 
 ---
 
 # Security Checklist
 
-Before every release:
+Before every release
 
-- No secrets in the repository
-- Environment variables validated
-- Lint passes
-- Tests pass
-- Dependency audit completed
-- Firestore Security Rules reviewed
-- Permissions reviewed
-- Logging reviewed
-- Backup strategy verified
-- Documentation updated
+✓ HTTPS only
+
+✓ Firebase Rules Verified
+
+✓ No Hardcoded Secrets
+
+✓ Authentication Tested
+
+✓ Authorization Tested
+
+✓ Offline Mode Tested
+
+✓ Logout Tested
+
+✓ Session Restore Tested
+
+✓ Database Access Verified
+
+✓ Documentation Updated
 
 ---
 
-# Final Principle
+# Future Security Roadmap
 
-Every feature must be designed with security and privacy as default.
+Biometric Login
 
-User trust is more important than development speed.
+Fingerprint
 
-Any feature that compromises security or privacy must be redesigned before release.
+Face ID
+
+Encrypted SQLite
+
+Multi Factor Authentication
+
+Security Audit Logs
+
+Advanced Device Verification
+
+Healthcare Compliance Review
+
+---
+
+# Final Security Rule
+
+Security is never optional.
+
+If a feature cannot be implemented securely,
+
+it must not be released until the security concerns are resolved.
+
+Protecting users and their family data always takes priority over shipping new features.
+
+---
+
+End of Document
+
+Document Name
+
+10_SECURITY.md
+
+Version
+
+2.0
+
+Status
+
+Approved
+
+Project
+
+Family Care
+
+Project Owner
+
+Zaeem Ahmad

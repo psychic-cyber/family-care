@@ -1,74 +1,58 @@
 # Family Care
 
-# Database Design & Synchronization
+# Database Design
 
-Version: 1.0
+Version: 2.0
 
-Status: Approved
+Status
 
-Author: Psychic Cyber + ChatGPT
+Approved
 
-Last Updated: July 2026
+Project Owner
+
+Zaeem Ahmad
 
 ---
 
 # Purpose
 
-This document defines:
+This document defines the complete database architecture for Family Care.
 
-- Firestore data model
-- SQLite schema
-- Relationships
-- Synchronization strategy
-- Conflict resolution
-- Migrations
-- Indexing
-- Data lifecycle
+The application uses two databases.
 
-The application follows an Offline-First architecture where SQLite is the local source of truth and Firestore is the cloud synchronization layer.
+• Firebase Firestore
 
----
+• SQLite
 
-# Database Architecture
+Firestore is the cloud database.
 
-                User
-                  │
-                  ▼
-          Presentation Layer
-                  │
-                  ▼
-          Repository Layer
-          ┌───────────────┐
-          │               │
-          ▼               ▼
-      SQLite         Firestore
-          │               │
-          └──── Sync Engine┘
+SQLite is the offline local database.
 
 ---
 
-# Design Principles
+# Database Strategy
 
-- Offline First
-- Single Source of Truth (Local)
-- Eventual Consistency
-- Immutable IDs
-- Soft Deletes
-- Versioned Records
+Cloud
 
----
+↓
 
-# Entity Relationships
+Firestore
 
-User
- └── Family
-      ├── Members
-      ├── Medicines
-      │      └── Reminders
-      │             └── Reminder History
-      ├── Notifications
-      ├── Emergency Contacts
-      └── Settings
+↓
+
+Synchronization Engine
+
+↓
+
+SQLite
+
+↓
+
+Application
+
+Internet is optional.
+
+Medicine reminders must continue working even when offline.
 
 ---
 
@@ -78,25 +62,27 @@ users
 
 families
 
-family_members
+familyMembers
+
+patients
 
 medicines
 
-reminders
+medicineSchedules
 
-reminder_history
+medicineHistory
+
+appointments
 
 notifications
 
-voice_profiles
+reports
 
 settings
 
-analytics
+emergencyContacts
 
-sync_queue
-
-emergency_contacts
+voiceSettings
 
 ---
 
@@ -106,65 +92,43 @@ users
 
 families
 
-family_members
+patients
 
 medicines
 
-reminders
+medicine_schedules
 
-reminder_history
+medicine_history
+
+appointments
 
 notifications
 
+reports_cache
+
+pending_sync
+
 settings
 
-sync_queue
+voice_settings
 
-voice_profiles
+All important data is stored locally.
 
 ---
 
-# Standard Columns
+# Collection
 
-Every table must contain:
+users
+
+Purpose
+
+Application users.
+
+Fields
 
 id
 
-createdAt
-
-updatedAt
-
-deletedAt (nullable)
-
-version
-
-syncStatus
-
-deviceId
-
-ownerId
-
----
-
-# Sync Status Values
-
-PENDING
-
-SYNCING
-
-SYNCED
-
-FAILED
-
-CONFLICT
-
----
-
-# Users Table
-
-Columns
-
-id
+firebaseUid
 
 fullName
 
@@ -172,23 +136,35 @@ email
 
 phone
 
-profileImage
+role
 
-language
+profileImage
 
 createdAt
 
 updatedAt
 
-version
+status
 
-syncStatus
+Example Role
+
+Administrator
+
+Caregiver
+
+Parent
 
 ---
 
-# Families Table
+# Collection
 
-Columns
+families
+
+Purpose
+
+Represents one family.
+
+Fields
 
 id
 
@@ -196,169 +172,7 @@ familyName
 
 createdBy
 
-inviteCode
-
-createdAt
-
-updatedAt
-
-version
-
-syncStatus
-
----
-
-# Family Members Table
-
-Columns
-
-id
-
-familyId
-
-userId
-
-role
-
-relationship
-
-status
-
-createdAt
-
-updatedAt
-
-version
-
-syncStatus
-
----
-
-# Medicines Table
-
-Columns
-
-id
-
-familyId
-
-name
-
-dosage
-
-unit
-
-instructions
-
-imageUrl
-
-startDate
-
-endDate
-
-frequency
-
-isActive
-
-createdAt
-
-updatedAt
-
-version
-
-syncStatus
-
----
-
-# Reminders Table
-
-Columns
-
-id
-
-medicineId
-
-scheduledTime
-
-repeatType
-
-daysOfWeek
-
 timezone
-
-voiceProfileId
-
-status
-
-nextRun
-
-createdAt
-
-updatedAt
-
-version
-
-syncStatus
-
----
-
-# Reminder History Table
-
-Columns
-
-id
-
-reminderId
-
-scheduledAt
-
-completedAt
-
-confirmationMethod
-
-result
-
-notes
-
-createdAt
-
-syncStatus
-
----
-
-# Notifications Table
-
-Columns
-
-id
-
-title
-
-body
-
-type
-
-status
-
-readAt
-
-createdAt
-
-syncStatus
-
----
-
-# Voice Profiles Table
-
-Columns
-
-id
-
-userId
-
-storagePath
-
-duration
 
 language
 
@@ -366,37 +180,277 @@ createdAt
 
 updatedAt
 
-syncStatus
+status
 
 ---
 
-# Emergency Contacts Table
+# Collection
 
-Columns
+familyMembers
+
+Purpose
+
+Stores relationships inside one family.
+
+Fields
 
 id
 
+familyId
+
 userId
 
-name
+relation
 
-phone
+deviceType
 
-relationship
+devicePlatform
 
-priority
+voiceEnabled
+
+notificationEnabled
+
+status
+
+---
+
+# Collection
+
+patients
+
+Purpose
+
+Stores parent information.
+
+Fields
+
+id
+
+familyId
+
+fullName
+
+gender
+
+dateOfBirth
+
+bloodGroup
+
+height
+
+weight
+
+medicalConditions
+
+profileImage
+
+emergencyContact
 
 createdAt
 
 updatedAt
 
-syncStatus
+status
 
 ---
 
-# Settings Table
+# Collection
 
-Columns
+medicines
+
+Purpose
+
+Medicine master.
+
+Fields
+
+id
+
+patientId
+
+medicineName
+
+dosage
+
+type
+
+instructions
+
+startDate
+
+endDate
+
+createdAt
+
+updatedAt
+
+status
+
+---
+
+# Collection
+
+medicineSchedules
+
+Purpose
+
+Reminder schedule.
+
+Fields
+
+id
+
+medicineId
+
+patientId
+
+time
+
+repeatType
+
+repeatDays
+
+voiceReminder
+
+enabled
+
+createdAt
+
+updatedAt
+
+---
+
+# Collection
+
+medicineHistory
+
+Purpose
+
+Medicine history.
+
+Fields
+
+id
+
+scheduleId
+
+patientId
+
+date
+
+scheduledTime
+
+takenTime
+
+status
+
+notes
+
+---
+
+Status Values
+
+Taken
+
+Pending
+
+Missed
+
+Skipped
+
+---
+
+# Collection
+
+appointments
+
+Fields
+
+id
+
+patientId
+
+doctorName
+
+hospital
+
+date
+
+time
+
+notes
+
+status
+
+---
+
+# Collection
+
+notifications
+
+Fields
+
+id
+
+familyId
+
+title
+
+message
+
+type
+
+isRead
+
+createdAt
+
+---
+
+Notification Types
+
+Medicine
+
+Reminder
+
+Emergency
+
+Appointment
+
+Caregiver
+
+System
+
+---
+
+# Collection
+
+reports
+
+Fields
+
+id
+
+patientId
+
+week
+
+month
+
+taken
+
+missed
+
+compliance
+
+generatedAt
+
+---
+
+# Collection
+
+settings
+
+Fields
 
 id
 
@@ -404,260 +458,316 @@ theme
 
 language
 
-notificationsEnabled
+notifications
+
+darkMode
 
 voiceEnabled
 
-fontScale
-
-updatedAt
-
-syncStatus
-
 ---
 
-# Sync Queue
+# Collection
 
-Purpose
+voiceSettings
 
-Store pending operations while offline.
-
-Columns
+Fields
 
 id
 
-entity
+language
 
-entityId
+voice
 
-operation
+speed
 
-payload
+pitch
 
-retryCount
+volume
 
-lastAttempt
+repeatCount
 
-status
-
-createdAt
+greetingEnabled
 
 ---
 
-# Supported Operations
+# Collection
 
-CREATE
+emergencyContacts
 
-UPDATE
+Fields
 
-DELETE
+id
 
-RESTORE
+patientId
+
+name
+
+relation
+
+phone
+
+priority
 
 ---
 
-# Synchronization Flow
+# Relationships
+
+Family
+
+↓
+
+Patients
+
+↓
+
+Medicines
+
+↓
+
+Schedules
+
+↓
+
+History
+
+↓
+
+Reports
+
+---
+
+# Synchronization
+
+Every CRUD operation follows:
+
+SQLite
+
+↓
+
+Pending Queue
+
+↓
+
+Internet Available
+
+↓
+
+Firestore
+
+↓
+
+Success
+
+↓
+
+Remove Queue
+
+---
+
+# Offline Queue
+
+Stores
+
+Create
+
+Update
+
+Delete
+
+Retry
+
+Sync Timestamp
+
+---
+
+# Reminder Storage
+
+SQLite stores
+
+Reminder Time
+
+Medicine
+
+Voice Settings
+
+Repeat Rules
+
+Status
+
+Reminder ID
+
+This guarantees reminders work offline.
+
+---
+
+# History Flow
+
+Reminder Trigger
+
+↓
+
+Notification
+
+↓
+
+Voice Reminder
+
+↓
 
 User Action
 
 ↓
 
-Save to SQLite
+SQLite History
 
 ↓
 
-Mark as PENDING
-
-↓
-
-Queue Operation
-
-↓
-
-Internet Available?
-
-├── No → Wait
-└── Yes
-      ↓
- Upload to Firestore
-      ↓
- Update SQLite
-      ↓
- Mark as SYNCED
+Firestore Sync
 
 ---
 
-# Conflict Resolution
+# Indexes
 
-Default Strategy
-
-Last Write Wins
-
-Conflict Detection
-
-- Different version
-- Different updatedAt
-- Different deviceId
-
-Manual Merge
-
-Only for critical conflicts.
-
----
-
-# Deletion Strategy
-
-Soft Delete
-
-deletedAt is populated.
-
-Records remain until successful synchronization.
-
-Hard Delete
-
-Performed only after:
-
-- Successful sync
-- Retention period expires
-
----
-
-# Indexing Strategy
-
-SQLite
-
-Index:
-
-email
+Firestore Indexes
 
 familyId
 
+patientId
+
 medicineId
 
-scheduledTime
+scheduleId
 
-nextRun
+createdAt
 
-syncStatus
+status
 
-Firestore
-
-Composite indexes for:
-
-familyId + createdAt
-
-medicineId + nextRun
-
-userId + updatedAt
+These indexes improve query performance.
 
 ---
 
-# Migrations
+# Local IDs
 
-Every schema change requires:
+Every record contains
 
-Migration Version
+localId
 
-Migration Script
+cloudId
 
-Rollback Strategy
-
-Backward Compatibility Check
-
----
-
-# Backup Strategy
-
-SQLite
-
-Automatic local backup before migrations.
-
-Firestore
-
-Cloud persistence enabled.
+This simplifies synchronization.
 
 ---
 
 # Data Retention
 
-Reminder History
+Medicine History
 
-Retain for 12 months.
+12 Months
+
+Reports
+
+24 Months
 
 Notifications
 
-Retain for 90 days.
+90 Days
 
-Sync Queue
+Pending Sync
 
-Delete after successful synchronization.
-
-Soft Deleted Records
-
-Retain for 30 days.
+Until Success
 
 ---
 
-# Performance Targets
+# Backup Strategy
 
-SQLite Query
+Firestore
 
-<100ms
+Automatic Cloud Backup
 
-Reminder Scheduling
+SQLite
 
-<300ms
+Recreated from Cloud after login
 
-Sync Batch
+MMKV
 
-50 records per batch
-
-App Startup
-
-<2 seconds
+Stores lightweight settings only.
 
 ---
 
 # Security
 
-Never store passwords.
+Every family accesses only its own records.
 
-Never store authentication tokens in SQLite.
+Firestore Security Rules enforce isolation.
 
-Encrypt sensitive preferences.
+Sensitive information is never shared across families.
 
-Use Secure Storage for credentials.
+---
+
+# Future Tables
+
+doctor_notes
+
+prescriptions
+
+medicine_inventory
+
+health_metrics
+
+wearable_data
+
+ai_recommendations
+
+video_consultations
+
+These tables are reserved for future versions.
 
 ---
 
 # Database Rules
 
-Every entity must have a unique ID.
+Never access Firestore directly from UI.
 
-Every record must include timestamps.
+Never access SQLite directly from Presentation.
 
-Every write operation goes through the Repository.
+Always use Repository Layer.
 
-SQLite is the local source of truth.
+Always validate before saving.
 
-Firestore is the synchronization layer.
-
-Never bypass the Sync Engine.
-
-No direct database access from the UI.
+Never duplicate data unnecessarily.
 
 ---
 
-# Future Enhancements
+# Current Database Version
 
-Encrypted SQLite Database
+Version
 
-Multi-device Conflict Resolution
+1.0
 
-Incremental Sync
+Status
 
-Background Delta Sync
+Approved
 
-Automatic Database Compression
+---
 
-Archive Old Reminder History
+End of Document
+
+Document Name
+
+09_DATABASE.md
+
+Version
+
+2.0
+
+Status
+
+Approved
+
+Project
+
+Family Care
+
+Project Owner
+
+Zaeem Ahmad
