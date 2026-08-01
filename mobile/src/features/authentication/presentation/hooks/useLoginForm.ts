@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Alert } from 'react-native';
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import {
   LoginFormData,
   LoginSchema,

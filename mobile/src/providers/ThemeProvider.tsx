@@ -4,7 +4,7 @@ import { Appearance } from 'react-native';
 import { LightTheme } from '../theme/lightTheme';
 import { DarkTheme } from '../theme/darkTheme';
 
-type ThemeType = typeof LightTheme;
+type ThemeType = typeof LightTheme | typeof DarkTheme;
 
 const ThemeContext = createContext<ThemeType>(LightTheme);
 
