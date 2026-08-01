@@ -92,8 +92,8 @@ export default function LoginScreen() {
         />
 
         <AppButton
-          title={isLoading ? 'Signing In...' : 'Sign In'}
-          onPress={handleSubmit(onSubmit)}
+          title={isLoading ? "Signing In..." : "Sign In"}
+          onPress={() => handleSubmit(onSubmit)()}
           disabled={isLoading}
         />
       </View>

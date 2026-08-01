@@ -1,23 +1,23 @@
-import auth from '@react-native-firebase/auth';
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut,
+} from '@react-native-firebase/auth';
 
 import { IAuthRepository } from '../../domain/repositories/IAuthRepository';
 
 export class FirebaseAuthRepository implements IAuthRepository {
-  async signIn(
-    email: string,
-    password: string,
-  ): Promise<void> {
-    await auth().signInWithEmailAndPassword(
-      email,
-      password,
-    );
+  private auth = getAuth();
+
+  async signIn(email: string, password: string): Promise<void> {
+    await signInWithEmailAndPassword(this.auth, email, password);
   }
 
   async signOut(): Promise<void> {
-    await auth().signOut();
+    await signOut(this.auth);
   }
 
   async isAuthenticated(): Promise<boolean> {
-    return auth().currentUser !== null;
+    return this.auth.currentUser !== null;
   }
 }

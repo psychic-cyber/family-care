@@ -22,54 +22,22 @@ export const useLoginForm = () => {
     },
   });
 
-  const onSubmit = async (data: LoginFormData) => {
-    try {
-      setIsLoading(true);
+ const onSubmit = async (data: LoginFormData) => {
+   try {
+     setIsLoading(true);
 
-      await loginUseCase.execute(
-        data.email,
-        data.password,
-      );
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        const firebaseError =
-          error as FirebaseAuthTypes.NativeFirebaseAuthError;
+     await loginUseCase.execute(data.email, data.password);
+   } catch (e) {
+     console.error(e);
 
-        switch (firebaseError.code) {
-          case 'auth/invalid-credential':
-          case 'auth/wrong-password':
-          case 'auth/user-not-found':
-            Alert.alert(
-              'Login Failed',
-              'Invalid email or password.',
-            );
-            break;
-
-          case 'auth/invalid-email':
-            Alert.alert(
-              'Invalid Email',
-              'Please enter a valid email address.',
-            );
-            break;
-
-          case 'auth/network-request-failed':
-            Alert.alert(
-              'Network Error',
-              'Please check your internet connection.',
-            );
-            break;
-
-          default:
-            Alert.alert(
-              'Error',
-              firebaseError.message,
-            );
-        }
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
+     Alert.alert(
+       'Login Failed',
+       'Unable to sign in. Please check your email and password.',
+     );
+   } finally {
+     setIsLoading(false);
+   }
+ };
 
   return {
     ...form,
