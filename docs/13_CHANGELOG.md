@@ -40,6 +40,22 @@ GitHub repository.
 
 Documentation-driven workflow.
 
+Authentication UI Kit.
+
+Authentication reusable components.
+
+Login Screen.
+
+Register Screen UI.
+
+Forgot Password UI.
+
+OTP Components.
+
+Responsive Authentication Layout.
+
+Google Sign-In Button.
+
 ---
 
 ## Changed
@@ -51,6 +67,14 @@ Dashboard redesigned using medical UI.
 Reusable component library expanded.
 
 Documentation rewritten.
+
+Authentication screens redesigned to match official medical design.
+
+Improved responsive spacing.
+
+Improved dark theme consistency.
+
+Improved reusable authentication components.
 
 ---
 

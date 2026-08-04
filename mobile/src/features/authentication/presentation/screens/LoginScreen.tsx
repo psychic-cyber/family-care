@@ -1,10 +1,19 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Controller } from 'react-hook-form';
+import {
+  Pressable,
+  StyleSheet,
+} from 'react-native';
 
-import AppButton from '../../../../components/atoms/AppButton';
-import AppInput from '../../../../components/atoms/AppInput';
+import AppDivider from '../../../../components/atoms/AppDivider';
 import AppText from '../../../../components/atoms/AppText';
+
+import AuthLayout from '../layouts/AuthLayout';
+import AuthLogo from '../components/common/AuthLogo';
+import AuthHeader from '../components/common/AuthHeader';
+import AuthButton from '../components/common/AuthButton';
+import AuthFooter from '../components/common/AuthFooter';
+import SocialLoginButton from '../components/common/SocialLoginButton';
+import LoginForm from '../components/login/LoginForm';
 
 import { useAppTheme } from '../../../../hooks/useAppTheme';
 import { Spacing } from '../../../../theme';
@@ -22,97 +31,51 @@ export default function LoginScreen() {
   } = useLoginForm();
 
   return (
-    <View
-      style={[
-        styles.container,
-        {
-          backgroundColor: colors.background,
-        },
-      ]}>
-      <AppText variant="h1">
-        Welcome Back
-      </AppText>
+    <AuthLayout>
+      <AuthLogo />
 
-      <AppText
-        variant="body"
-        color={colors.textSecondary}
-        style={styles.subtitle}>
-        Sign in to continue
-      </AppText>
+      <AuthHeader
+        title="Welcome Back"
+        subtitle="Sign in to continue caring for your loved ones."
+      />
 
-      <View style={styles.form}>
-        <Controller
-          control={control}
-          name="email"
-          render={({
-            field: {
-              onChange,
-              onBlur,
-              value,
-            },
-            fieldState: { error },
-          }) => (
-            <AppInput
-              label="Email"
-              placeholder="Enter your email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-              value={value}
-              onBlur={onBlur}
-              onChangeText={onChange}
-              error={error?.message}
-            />
-          )}
-        />
+      <LoginForm control={control} />
 
-        <Controller
-          control={control}
-          name="password"
-          render={({
-            field: {
-              onChange,
-              onBlur,
-              value,
-            },
-            fieldState: { error },
-          }) => (
-            <AppInput
-              label="Password"
-              placeholder="Enter your password"
-              secureTextEntry
-              autoCapitalize="none"
-              autoCorrect={false}
-              value={value}
-              onBlur={onBlur}
-              onChangeText={onChange}
-              error={error?.message}
-            />
-          )}
-        />
+      <Pressable style={styles.forgotPassword}>
+        <AppText
+          variant="body"
+          color={colors.primary}>
+          Forgot Password?
+        </AppText>
+      </Pressable>
 
-        <AppButton
-          title={isLoading ? "Signing In..." : "Sign In"}
-          onPress={() => handleSubmit(onSubmit)()}
-          disabled={isLoading}
-        />
-      </View>
-    </View>
+      <AuthButton
+        title="Sign In"
+        loading={isLoading}
+        onPress={handleSubmit(onSubmit)}
+      />
+
+      <AppDivider />
+
+      <SocialLoginButton
+        title="Continue with Google"
+        icon="google"
+        onPress={() => {}}
+      />
+
+      <AuthFooter
+        title="Don't have an account?"
+        action="Create Account"
+        onPress={() => {}}
+      />
+    </AuthLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: Spacing.lg,
-  },
-
-  subtitle: {
-    marginTop: Spacing.sm,
-  },
-
-  form: {
-    marginTop: Spacing.xxxl,
+  forgotPassword: {
+    alignSelf: 'flex-end',
+    marginTop: Spacing.xs,
+    marginBottom: Spacing.sm,
   },
 });

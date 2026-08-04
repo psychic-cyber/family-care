@@ -1,7 +1,8 @@
 import React from 'react';
 
-import AdminNavigator from '../features/admin/presentation/navigation/AdminNavigator';
+import AuthNavigator from '../features/authentication/presentation/navigation/AuthNavigator';
+// import AdminNavigator from '../features/admin/presentation/navigation/AdminNavigator';
 
 export default function RootNavigator() {
-  return <AdminNavigator />;
+  return <AuthNavigator />;
 }

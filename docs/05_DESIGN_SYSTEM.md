@@ -366,6 +366,46 @@ Spinner
 
 ---
 
+# Authentication Design
+
+The Authentication module follows the official Family Care medical design language.
+
+## Authentication Layout
+
+- Responsive vertical layout
+- Safe Area support
+- Keyboard-aware scrolling
+- Centered content
+- Consistent spacing across all authentication screens
+
+## Authentication Components
+
+Reusable Components:
+
+- AuthLayout
+- AuthLogo
+- AuthHeader
+- AuthInput
+- AuthPasswordInput
+- AuthButton
+- AuthSecondaryButton
+- AuthCheckbox
+- AuthFooter
+- SocialLoginButton
+- OTPInput
+- OTPBox
+
+## Authentication Rules
+
+- Rounded XL input fields
+- Rounded XL buttons
+- Primary Green focus state
+- Password visibility toggle
+- Divider between login methods
+- Google Sign-In button
+- Minimum touch target 48dp
+- Light Theme and Dark Theme must remain visually identical except for colors
+
 # Input Fields
 
 Rounded Corners
